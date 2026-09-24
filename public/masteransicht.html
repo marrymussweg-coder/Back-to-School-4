@@ -601,5 +601,34 @@
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
   </script>
+<div style="position:fixed; top:12px; right:12px; display:flex; gap:10px; z-index:200;">
+  <button id="showAllBtn" style="padding:10px 18px; border-radius:8px; border:none; background:#d6a83a; color:#1e3a30; font-family:inherit; cursor:pointer;">Alle Antworten anzeigen</button>
+  <button id="resetAllBtn" style="padding:10px 18px; border-radius:8px; border:none; background:#c1443c; color:#fff; font-family:inherit; cursor:pointer;">Alles zurücksetzen</button>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  let showAllState = false;
+  const showAllBtn = document.getElementById('showAllBtn');
+  const resetAllBtn = document.getElementById('resetAllBtn');
+
+  socket.on('init', (data) => {
+    showAllState = data.showAll;
+    showAllBtn.textContent = showAllState ? 'Antworten verbergen' : 'Alle Antworten anzeigen';
+  });
+
+  showAllBtn.addEventListener('click', () => {
+    showAllState = !showAllState;
+    socket.emit('toggleShowAll', showAllState);
+    showAllBtn.textContent = showAllState ? 'Antworten verbergen' : 'Alle Antworten anzeigen';
+  });
+
+  resetAllBtn.addEventListener('click', () => {
+    if (confirm('Wirklich alle Tafeln zurücksetzen?')) {
+      socket.emit('resetAll');
+    }
+  });
+</script>
 </body>
 </html>

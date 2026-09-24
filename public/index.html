@@ -283,7 +283,7 @@
 
     <h1>Wähl deinen Charakter</h1>
     <p class="sub">Tipp auf dein Profilbild, um für die heutige Runde <span class="accent">Back to School 4</span> anzutreten.</p>
-
+<button id="weiterBtn" style="display:none; margin-top:16px; padding:10px 24px; font-family:inherit; font-size:1.1rem; background:var(--gold, #d6a83a); color:#1e3a30; border:none; border-radius:8px; cursor:pointer;">Weiter zum Zeichentool →</button>
     <div class="grid" role="group" aria-label="Charakterauswahl">
       
         <button type="button" class="tag" data-name="Brauni" aria-pressed="false">
@@ -446,22 +446,34 @@
   </div>
 
   <footer>made by Real Simon</footer>
+<script>
+  const tags = document.querySelectorAll('.tag');
+  const line = document.getElementById('selectionLine');
+  const weiterBtn = document.getElementById('weiterBtn');
+  let selectedName = null;
 
-  <script>
-    const tags = document.querySelectorAll('.tag');
-    const line = document.getElementById('selectionLine');
-    tags.forEach(tag => {
-      tag.addEventListener('click', () => {
-        const already = tag.getAttribute('aria-pressed') === 'true';
-        tags.forEach(t => t.setAttribute('aria-pressed', 'false'));
-        if (!already) {
-          tag.setAttribute('aria-pressed', 'true');
-          line.textContent = 'Du spielst als ' + tag.dataset.name + '.';
-        } else {
-          line.textContent = '';
-        }
-      });
+  tags.forEach(tag => {
+    tag.addEventListener('click', () => {
+      const already = tag.getAttribute('aria-pressed') === 'true';
+      tags.forEach(t => t.setAttribute('aria-pressed', 'false'));
+      if (!already) {
+        tag.setAttribute('aria-pressed', 'true');
+        selectedName = tag.dataset.name;
+        line.textContent = 'Du spielst als ' + selectedName + '.';
+        weiterBtn.style.display = 'inline-block';
+      } else {
+        selectedName = null;
+        line.textContent = '';
+        weiterBtn.style.display = 'none';
+      }
     });
-  </script>
+  });
+
+  weiterBtn.addEventListener('click', () => {
+    if (selectedName) {
+      window.location.href = 'zeichentool.html?name=' + encodeURIComponent(selectedName);
+    }
+  });
+</script>
 </body>
 </html>
